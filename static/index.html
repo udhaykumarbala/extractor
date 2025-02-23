@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Data Extraction</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        h1 {
+            color: #333;
+            margin: 0;
+            padding: 20px 0;
+        }
+        .description {
+            color: #666;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>PDF Data Extraction</h1>
+            <p class="description">
+                Upload multiple PDF files to extract utility bill data. 
+                Track the progress and view results in real-time.
+            </p>
+        </header>
+        
+        <file-upload></file-upload>
+        <task-manager></task-manager>
+    </div>
+
+    <script src="/static/components/FileUpload.js"></script>
+    <script src="/static/components/TaskManager.js"></script>
+</body>
+</html> 
