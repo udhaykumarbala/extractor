@@ -3,6 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from datetime import datetime
 import enum
+import os
 
 Base = declarative_base()
 
@@ -40,8 +41,15 @@ class ExtractionResult(Base):
     task = relationship("Task", back_populates="results")
 
 # Database initialization
-DATABASE_URL = "sqlite:///./extraction.db"
-engine = create_engine(DATABASE_URL)
+DATABASE_URL = "sqlite:////app/extraction.db"
+engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 
 def init_db():
+    # Ensure the directory exists and has proper permissions
+    db_path = DATABASE_URL.replace('sqlite:///','')
+    db_dir = os.path.dirname(db_path)
+    if db_dir and not os.path.exists(db_dir):
+        os.makedirs(db_dir, exist_ok=True)
+    
+    # Create tables
     Base.metadata.create_all(engine) 
