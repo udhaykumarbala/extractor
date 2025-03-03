@@ -21,9 +21,11 @@ COPY *.py ./
 COPY .env .
 COPY entrypoint.sh .
 
-# Create uploads directory
+# Create necessary directories
 RUN mkdir -p uploads
 RUN mkdir -p static
+RUN mkdir -p data
+RUN chmod -R 777 data
 
 # Copy static files if they exist
 COPY static/ static/

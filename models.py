@@ -41,7 +41,7 @@ class ExtractionResult(Base):
     task = relationship("Task", back_populates="results")
 
 # Database initialization
-DATABASE_URL = "sqlite:////app/extraction.db"
+DATABASE_URL = "sqlite:////app/data/extraction.db"
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 
 def init_db():
@@ -50,6 +50,8 @@ def init_db():
     db_dir = os.path.dirname(db_path)
     if db_dir and not os.path.exists(db_dir):
         os.makedirs(db_dir, exist_ok=True)
+        # Make sure directory is writable
+        os.chmod(db_dir, 0o777)
     
     # Create tables
     Base.metadata.create_all(engine) 

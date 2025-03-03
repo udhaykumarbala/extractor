@@ -1,30 +1,37 @@
 #!/bin/bash
 set -e
 
-echo "Checking database directory permissions..."
-# Ensure the app directory is writable
-touch /app/permissions_test && rm /app/permissions_test || {
-    echo "Error: Cannot write to /app directory. Fixing permissions..."
-    chmod 777 /app
-}
+echo "Setting up data directory..."
+mkdir -p /app/data
+chmod 777 /app/data
 
-echo "Initializing database..."
-# Make sure database file is writable or doesn't exist yet
-if [ -f /app/extraction.db ]; then
+echo "Checking for database file..."
+DB_FILE="/app/data/extraction.db"
+if [ -f "$DB_FILE" ]; then
     echo "Database file exists, checking permissions..."
-    touch /app/extraction.db || {
-        echo "Fixing database file permissions..."
-        chmod 666 /app/extraction.db
-    }
+    # Check if we can write to it
+    if [ ! -w "$DB_FILE" ]; then
+        echo "Setting write permissions on database file..."
+        chmod 666 "$DB_FILE"
+    fi
 else
     echo "Database file doesn't exist yet, it will be created with proper permissions."
+    # Creating an empty file to ensure proper permissions
+    touch "$DB_FILE"
+    chmod 666 "$DB_FILE"
 fi
 
-# Try to initialize database
+echo "Initializing database..."
 python -c "from models import init_db; init_db()" || {
-    echo "Database initialization failed. Trying with a new database file..."
-    # If volume-mounted DB fails, try with a new local DB
-    mv /app/extraction.db /app/extraction.db.bak 2>/dev/null || true
+    echo "Database initialization failed. This could be due to permission issues."
+    echo "Debugging information:"
+    ls -la /app/data
+    df -h
+    id
+    echo "Trying with a new database setup..."
+    rm -f "$DB_FILE" || true
+    touch "$DB_FILE" 
+    chmod 666 "$DB_FILE"
     python -c "from models import init_db; init_db()"
 }
 

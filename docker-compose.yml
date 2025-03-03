@@ -7,7 +7,7 @@ services:
       - "80:8000"
     volumes:
       - ./uploads:/app/uploads
-      - db_data:/app/extraction.db
+      - db_data:/app/data
     env_file:
       - .env
     environment:
