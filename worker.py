@@ -3,6 +3,7 @@ import aiofiles
 import os
 from typing import List
 import logging
+import traceback
 from database import (
     create_task,
     update_task_status,
@@ -38,7 +39,29 @@ class ExtractionWorker:
             extracted_data = await llm_extract_data_from_pdf(filepath)
             
             # Convert to JSON-serializable format
-            serialized_data = jsonable_encoder(extracted_data)
+            try:
+                serialized_data = jsonable_encoder(extracted_data)
+            except Exception as json_err:
+                logger.error(f"Error serializing data for {filename}: {str(json_err)}")
+                # Try a more defensive approach to salvage partial data
+                try:
+                    # Create a filtered dictionary without problematic fields
+                    safe_data = {}
+                    for key, value in extracted_data.__dict__.items():
+                        if key.startswith('_'):
+                            continue
+                        try:
+                            # Test if this field can be serialized
+                            jsonable_encoder({key: value})
+                            safe_data[key] = value
+                        except:
+                            safe_data[key] = None
+                    
+                    serialized_data = jsonable_encoder(safe_data)
+                    logger.warning(f"Recovered partial data for {filename} by removing problematic fields")
+                except Exception as recovery_err:
+                    logger.error(f"Failed to recover any data from {filename}: {str(recovery_err)}")
+                    raise ValueError(f"Data serialization failed: {str(json_err)}")
             
             # Add filename to the extracted data
             serialized_data['source_file'] = filename
@@ -53,7 +76,10 @@ class ExtractionWorker:
             increment_processed_files(task_id, success=True)
             
         except Exception as e:
+            error_details = traceback.format_exc()
             logger.error(f"Error processing file {filename}: {str(e)}")
+            logger.debug(f"Detailed error traceback: {error_details}")
+            
             # Add failed result
             add_extraction_result(
                 task_id=task_id,

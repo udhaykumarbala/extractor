@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  extractor:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./uploads:/app/uploads
+      - ./extraction.db:/app/extraction.db
+    env_file:
+      - .env
+    environment:
+      - TZ=UTC
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8000/') or exit(1)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s 

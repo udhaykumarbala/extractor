@@ -44,7 +44,7 @@ The expected fields are:
     "meters": [
         {
             "meter_number": string,
-            "bill_type": string,  // must be one of: "Water bill", "EB bill", "Gas bill"
+            "bill_type": string,  // must be one of: "Water bill", "Telecom bill", "EB bill", "Gas bill"
             "previous_read_date": "YYYY-MM-DD",
             "read_date": "YYYY-MM-DD",
             "previous_reading": float,

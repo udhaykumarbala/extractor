@@ -1,0 +1,52 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Development
+.git
+.gitignore
+.github
+.vscode
+.idea
+*.swp
+*.swo
+.DS_Store
+
+# Project specific
+extraction.db
+uploads/*
+*.tmp
+*.log
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Docs
+README.md
+README.docker.md
+LICENSE
+docs/
+
+# Don't ignore
+!static/
+!requirements.txt 

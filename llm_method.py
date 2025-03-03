@@ -8,6 +8,8 @@ from pydantic import BaseModel, Field
 from typing import Optional, List, Literal
 from dotenv import load_dotenv
 import os
+import re
+from dateutil import parser as date_parser
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -18,9 +20,34 @@ load_dotenv()
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 
+def safe_parse_date(date_str):
+    """Safely parse date strings, handling special cases and multiple formats."""
+    if not date_str:
+        return None
+        
+    # Handle special cases
+    special_cases = ["Upon Receipt", "upon receipt", "UPON RECEIPT", "Due on receipt", "DUE ON RECEIPT"]
+    if any(case in date_str for case in special_cases):
+        logger.warning(f"Special date case encountered: '{date_str}'. Returning None.")
+        return None
+    
+    # Try ISO format first
+    try:
+        return datetime.fromisoformat(date_str)
+    except ValueError:
+        pass
+    
+    # Try other common date formats
+    try:
+        return date_parser.parse(date_str)
+    except (ValueError, TypeError) as e:
+        logger.warning(f"Failed to parse date '{date_str}': {e}. Returning None.")
+        return None
+
+
 class MeterData(BaseModel):
     meter_number: Optional[str] = None
-    bill_type: Optional[Literal["Water bill", "EB bill", "Gas bill"]] = Field(default=None, description="Type of utility bill")
+    bill_type: Optional[Literal["Water bill", "Telecom bill", "EB bill", "Gas bill"]] = Field(default=None, description="Type of utility bill")
     previous_read_date: Optional[datetime] = None
     read_date: Optional[datetime] = None
     previous_reading: Optional[float] = None
@@ -107,7 +134,7 @@ For each bill, extract:
 
 2. For each meter (up to 3 meters), extract:
    - meter_number (string)
-   - bill_type (string, must be one of: "Water bill", "EB bill", "Gas bill")
+   - bill_type (string, must be one of: "Water bill", "Telecom bill", "EB bill", "Gas bill")
    - previous_read_date (YYYY-MM-DD)
    - read_date (YYYY-MM-DD)
    - previous_reading (float)
@@ -158,8 +185,16 @@ Respond with a valid JSON object containing these fields. Include null for missi
 Be precise with number extraction and pay attention to decimal places.
 For boolean fields, use true/false values.
 For dates, use ISO format (YYYY-MM-DD).
+
+IMPORTANT DATE HANDLING RULES:
+1. For standard dates, use ISO format (YYYY-MM-DD).
+2. If a date field says "Upon Receipt" or similar non-date text, use the exact text "Upon Receipt".
+3. If a date is completely missing, use null.
+4. Don't make up dates - if you can't determine the exact date, use null.
+
 For bill_type, determine the type based on:
 - Water bill: If the bill is for water usage/consumption
+- Telecom bill: If the bill is for telecom usage/consumption
 - EB bill: If the bill is for electricity
 - Gas bill: If the bill is for natural gas
 
@@ -222,19 +257,19 @@ For charges categorization:
             # Merge basic_information into top level
             data.update(data.pop("basic_information"))
         
-        # Convert string dates to datetime objects
+        # Convert string dates to datetime objects using safe_parse_date
         if data.get('bill_date'):
-            data['bill_date'] = datetime.fromisoformat(data['bill_date'])
+            data['bill_date'] = safe_parse_date(data['bill_date'])
         if data.get('due_date'):
-            data['due_date'] = datetime.fromisoformat(data['due_date'])
+            data['due_date'] = safe_parse_date(data['due_date'])
         
         # Process meter data
         if 'meters' in data:
             for meter in data['meters']:
                 if meter.get('previous_read_date'):
-                    meter['previous_read_date'] = datetime.fromisoformat(meter['previous_read_date'])
+                    meter['previous_read_date'] = safe_parse_date(meter['previous_read_date'])
                 if meter.get('read_date'):
-                    meter['read_date'] = datetime.fromisoformat(meter['read_date'])
+                    meter['read_date'] = safe_parse_date(meter['read_date'])
 
         bill_data = BillData(**data)
         logger.debug(f"Successfully created BillData instance: {bill_data}")

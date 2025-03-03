@@ -1,0 +1,139 @@
+0g compute or service marketplace - we are relying on aethir - Need to cehck the term with michelle, since aethir is doing compute that might cause conflict of interest
+
+
+other charges combined with tax 
+
+late fee, if explicitly stated in bill
+
+template
+ - email is a follow up mail
+ - option to enable disable
+ - User identity on mail
+
+Need a user guide, may be video
+
+profile picture - upload image
+
+
+0G 101
+ - testnet & docs,  get it started 3 mins
+
+
+onboarding call - all product overview
+ - video recording
+ - docs
+ - message
+
+ before & after hackathon number changes
+
+sheet for managing 
+
+hyper scholar near mainnnet launch
+
+follow Berachain, solana programs
+
+build on base (like 0G) course on it
+
+This year
+    own online hackathon
+    own hacker house
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+A. Common Pages (for All Users)
+  Login Page
+  Change password 
+  forget password
+
+
+B. Student-Specific Pages
+Student Dashboard:
+  - Overview of recent requests, current status (pending, approved, rejected), and notifications.
+    Quick-access buttons to submit a new gate pass request.
+Gate Pass Request Page:
+  - Form to enter departure/return times, purpose, destination, and attach supporting documents (e.g., mentor letter).
+    Built-in validations (e.g., date/time checks, mandatory fields).
+  - Emergency Request Option
+Request Details / Status Page:
+    - Detailed view of each submitted request including the multi-level approval history.
+    - Display of the QR code once final approval is granted along with validity information.
+
+
+
+Parent Dashboard:
+    - Overview of pending approvals and recent notifications regarding their child’s gate pass requests.
+Parental Approval Page:
+    - Displays details of the student’s request.
+    - Enables approval or rejection (May be via a secure OTP-based verification process, based on admin setting).
+    - Option to add comments for context.
+
+
+
+D. Administrator/Warden-Specific Pages
+Admin/Warden Dashboard:
+    - Summary of pending requests, approval timelines, and critical alerts (e.g., overdue returns).
+    - Real-time analytics on request volumes and processing times.
+Request Approval Page:
+    - Detailed view for reviewing new requests with options to approve/reject and add comments.
+    - Logging of review timestamps and approval history.
+Final Approval Page :
+    - Final review interface once parental approval is complete.
+    - Triggers the generation of a secure, time-bound QR code.
+Reporting & Analytics Page:
+    - Generate customizable reports (by date, student, hostel, approval status).
+    - View audit trails, export data for further analysis, and track compliance metrics.
+User Management & Institution Configuration Page:
+    - Onboarding of new institutions and user roles (admin, warden, student, parent).
+    - Configuration of permissions and integration settings.
+
+
+
+E. Security Personnel-Specific Pages
+Security Dashboard:
+    - Interface to quickly access scanning functionality and view pending validations.
+QR Code Verification / Scanning Page:
+    - Allows security staff to scan the QR code using a web app from their mobile.
+    - Logs exact timestamps of exit and entry, and automatically triggers alerts in case of discrepancies (e.g., delayed    return or multiple scans).
+
+
+
+
+Admin portal
+ - Team management - add, remove, edit teams, workflow
+ - User management - add, remove, edit users
+ - Role management - add, remove, edit roles
+ - Budget management - add, remove, edit budgets
+ - category management - add, remove, edit categories (for vendors)
+ - Triggering vendor registration by sending specific registration email to vendors
+
+
+Buyer portal
+ - Budget overview
+ - RFP management - create, edit, delete RFPs
+ - Approval of RFP
+ - AI overview of submitted quotations
+ - Quotation selection (multi level)
+ - Issue PO (manually upload po send it to selected vendor)
+ - View GRNs & payment status update
+ - Payment history
+
+
+Vendor portal
+ - Vendor registration (available categories) 
+ - RFP overview
+ - Quotation upload with deadline
+ - Recipt of PO
+ - GRN upload with invoice
+ - Payment status
+ - Payment history
